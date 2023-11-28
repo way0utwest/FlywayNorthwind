@@ -106,6 +106,10 @@ reseedIdentityColumns = false
 skipIntegrityChecksForForeignKeys = false
 transportClrDataTypesAsBinary = false
 
+  [[redgateCompare.staticDataTables]]
+  schema = "dbo"
+  table = "Categories"
+
 [flyway]
 mixed = true
 outOfOrder = true
