@@ -1,0 +1,35 @@
+﻿SET NUMERIC_ROUNDABORT OFF
+GO
+SET ANSI_PADDING, ANSI_WARNINGS, CONCAT_NULL_YIELDS_NULL, ARITHABORT, QUOTED_IDENTIFIER, ANSI_NULLS ON
+GO
+PRINT N'Dropping constraints from [Auditing].[Employees]'
+GO
+ALTER TABLE [Auditing].[Employees] DROP CONSTRAINT [PK_Employees]
+GO
+PRINT N'Dropping constraints from [Auditing].[Employees]'
+GO
+ALTER TABLE [Auditing].[Employees] DROP CONSTRAINT [DF__Employees__Modif__5CD6CB2B]
+GO
+PRINT N'Dropping trigger [dbo].[Employee_Ins] from [dbo].[Employees]'
+GO
+DROP TRIGGER [dbo].[Employee_Ins]
+GO
+PRINT N'Dropping [Auditing].[Employees]'
+GO
+DROP TABLE [Auditing].[Employees]
+GO
+PRINT N'Dropping schemas'
+GO
+IF SCHEMA_ID(N'Auditing') IS NOT NULL
+DROP SCHEMA [Auditing]
+GO
+
+﻿SET NUMERIC_ROUNDABORT OFF
+GO
+SET ANSI_PADDING, ANSI_WARNINGS, CONCAT_NULL_YIELDS_NULL, ARITHABORT, QUOTED_IDENTIFIER, ANSI_NULLS, NOCOUNT ON
+GO
+SET DATEFORMAT YMD
+GO
+SET XACT_ABORT ON
+GO
+

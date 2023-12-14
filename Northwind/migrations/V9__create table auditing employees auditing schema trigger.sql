@@ -1,6 +1,18 @@
-CREATE TABLE [dbo].[Employees]
+﻿SET NUMERIC_ROUNDABORT OFF
+GO
+SET ANSI_PADDING, ANSI_WARNINGS, CONCAT_NULL_YIELDS_NULL, ARITHABORT, QUOTED_IDENTIFIER, ANSI_NULLS ON
+GO
+PRINT N'Creating schemas'
+GO
+IF SCHEMA_ID(N'Auditing') IS NULL
+EXEC sp_executesql N'CREATE SCHEMA [Auditing]
+AUTHORIZATION [dbo]'
+GO
+PRINT N'Creating [Auditing].[Employees]'
+GO
+CREATE TABLE [Auditing].[Employees]
 (
-[EmployeeID] [int] NOT NULL IDENTITY(1, 1),
+[EmployeeID] [int] NOT NULL,
 [LastName] [nvarchar] (20) NOT NULL,
 [FirstName] [nvarchar] (10) NOT NULL,
 [Title] [nvarchar] (30) NULL,
@@ -17,12 +29,15 @@ CREATE TABLE [dbo].[Employees]
 [Photo] [image] NULL,
 [Notes] [ntext] NULL,
 [ReportsTo] [int] NULL,
-[PhotoPath] [nvarchar] (255) NULL
+[PhotoPath] [nvarchar] (255) NULL,
+[ModifiedDate] [datetime2] (3) NOT NULL CONSTRAINT [DF__Employees__Modif__5CD6CB2B] DEFAULT (getutcdate())
 )
 GO
-SET QUOTED_IDENTIFIER ON
+PRINT N'Creating primary key [PK_Employees] on [Auditing].[Employees]'
 GO
-SET ANSI_NULLS ON
+ALTER TABLE [Auditing].[Employees] ADD CONSTRAINT [PK_Employees] PRIMARY KEY CLUSTERED ([EmployeeID], [ModifiedDate])
+GO
+PRINT N'Creating trigger [dbo].[Employee_Ins] on [dbo].[Employees]'
 GO
 CREATE TRIGGER [dbo].[Employee_Ins] ON [dbo].[Employees] FOR INSERT
 AS
@@ -33,13 +48,13 @@ BEGIN
     FROM inserted
 END
 GO
-ALTER TABLE [dbo].[Employees] ADD CONSTRAINT [CK_Birthdate] CHECK (([BirthDate]<getdate()))
+
+﻿SET NUMERIC_ROUNDABORT OFF
 GO
-ALTER TABLE [dbo].[Employees] ADD CONSTRAINT [PK_Employees] PRIMARY KEY CLUSTERED ([EmployeeID])
+SET ANSI_PADDING, ANSI_WARNINGS, CONCAT_NULL_YIELDS_NULL, ARITHABORT, QUOTED_IDENTIFIER, ANSI_NULLS, NOCOUNT ON
 GO
-CREATE NONCLUSTERED INDEX [LastName] ON [dbo].[Employees] ([LastName])
+SET DATEFORMAT YMD
 GO
-CREATE NONCLUSTERED INDEX [PostalCode] ON [dbo].[Employees] ([PostalCode])
+SET XACT_ABORT ON
 GO
-ALTER TABLE [dbo].[Employees] ADD CONSTRAINT [FK_Employees_Employees] FOREIGN KEY ([ReportsTo]) REFERENCES [dbo].[Employees] ([EmployeeID])
-GO
+
