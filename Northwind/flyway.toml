@@ -7,6 +7,9 @@ developmentEnvironment = "development"
 shadowEnvironment = "shadow"
 schemaModel = "./schema-model"
 
+  [flywayDesktop.deployRules]
+  ff123 = "(feature==123)"
+
   [flywayDesktop.generate]
   undoScripts = true
 
@@ -28,7 +31,7 @@ decryptEncryptedObjects = true
 disableAutoColumnMapping = false
 dontUseAlterAssemblyToChangeClrObjects = false
 forbidDuplicateTableStorageSettings = false
-forceColumnOrder = false
+forceColumnOrder = true
 ignoreMigrationScripts = false
 includeDependencies = true
 includeRoleExistenceChecks = true
