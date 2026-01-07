@@ -1,0 +1,33 @@
+SET NUMERIC_ROUNDABORT OFF
+GO
+SET ANSI_PADDING, ANSI_WARNINGS, CONCAT_NULL_YIELDS_NULL, ARITHABORT, QUOTED_IDENTIFIER, ANSI_NULLS ON
+GO
+PRINT N'Dropping constraints from [dbo].[Order Details]'
+GO
+ALTER TABLE [dbo].[Order Details] DROP CONSTRAINT [DF__Order Det__DateC__7D0E9093]
+GO
+PRINT N'Dropping constraints from [dbo].[Order Details]'
+GO
+ALTER TABLE [dbo].[Order Details] DROP CONSTRAINT [DF__Order Det__DateM__7E02B4CC]
+GO
+PRINT N'Dropping trigger [dbo].[OrderDetails_tru] from [dbo].[Order Details]'
+GO
+DROP TRIGGER [dbo].[OrderDetails_tru]
+GO
+PRINT N'Altering [dbo].[Order Details]'
+GO
+ALTER TABLE [dbo].[Order Details] DROP
+COLUMN [UpdatedBy],
+COLUMN [DateCreated],
+COLUMN [DateModified]
+GO
+
+SET NUMERIC_ROUNDABORT OFF
+GO
+SET ANSI_PADDING, ANSI_WARNINGS, CONCAT_NULL_YIELDS_NULL, ARITHABORT, QUOTED_IDENTIFIER, ANSI_NULLS, NOCOUNT ON
+GO
+SET DATEFORMAT YMD
+GO
+SET XACT_ABORT ON
+GO
+
