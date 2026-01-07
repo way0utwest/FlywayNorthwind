@@ -2,33 +2,22 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-CREATE  	PROCEDURE [dbo].[SalesByCategory]
-    @AtCategoryName VARCHAR(15) = NULL,
-    @AtOrdYear VARCHAR(4) = NULL
+CREATE PROCEDURE [dbo].[SalesByCategory]
+    @CategoryName nvarchar(15), @OrdYear nvarchar(4) = '1998'
 AS
+IF @OrdYear != '1996' AND @OrdYear != '1997' AND @OrdYear != '1998' 
 BEGIN
-    IF @AtCategoryName IS NULL 
-		SET @AtCategoryName = 'General'
+	SELECT @OrdYear = '1998'
+END
 
-	IF @AtOrdYear IS NULL
-	   IF MONTH(GETDATE()) > 6
-	     SET @AtOrdYear = YEAR(GETDATE())+1
-		ELSE
-	     SET @AtOrdYear = YEAR(GETDATE())
-        
-    SELECT ProductName,
-           ROUND(SUM(OD.Quantity * (1 - OD.Discount) * OD.UnitPrice),2) AS TotalPurchase,
-		   MAX(O.OrderDate) AS MostRecentOrder
-    FROM Order_Details AS OD
-        INNER JOIN Orders AS O
-            ON OD.OrderID = O.OrderID
-        INNER JOIN Products AS P
-            ON OD.ProductID = P.ProductID
-        INNER JOIN Categories AS C
-            ON P.CategoryID = C.CategoryID
-    WHERE C.CategoryName = @AtCategoryName
-          AND YEAR(O.OrderDate) = @AtOrdYear
-    GROUP BY ProductName
-    ORDER BY ProductName;
-END;
+SELECT ProductName,
+	TotalPurchase=ROUND(SUM(CONVERT(decimal(14,2), OD.Quantity * (1-OD.Discount) * OD.UnitPrice)), 0)
+FROM [Order Details] OD, Orders O, Products P, Categories C
+WHERE OD.OrderID = O.OrderID 
+	AND OD.ProductID = P.ProductID 
+	AND P.CategoryID = C.CategoryID
+	AND C.CategoryName = @CategoryName
+	AND SUBSTRING(CONVERT(nvarchar(22), O.OrderDate, 111), 1, 4) = @OrdYear
+GROUP BY ProductName
+ORDER BY ProductName
 GO
